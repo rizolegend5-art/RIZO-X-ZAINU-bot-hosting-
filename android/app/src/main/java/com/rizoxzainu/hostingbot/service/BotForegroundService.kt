@@ -121,7 +121,7 @@ class BotForegroundService : Service() {
                 // Execute Python code in native sandbox
                 val sys = py.getModule("sys")
                 val path = sys["path"]
-                path.callAttr("append", botDir.absolutePath)
+                path?.callAttr("append", botDir.absolutePath)
 
                 broadcastLog("▶️ Executing bot.py inside local Android RAM...", "stdout")
                 
