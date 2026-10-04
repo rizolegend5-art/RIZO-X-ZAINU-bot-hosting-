@@ -3,14 +3,17 @@ import { Navbar } from './components/Navbar';
 import { HostNewBot } from './components/HostNewBot';
 import { MyBots } from './components/MyBots';
 import { ResourceMonitor } from './components/ResourceMonitor';
+import { Analytics } from './components/Analytics';
 import { TerminalLogs } from './components/TerminalLogs';
 import { AndroidCodeExport } from './components/AndroidCodeExport';
 import { Footer } from './components/Footer';
 import { INITIAL_BOTS } from './data/sampleBots';
 import { BotInstance, LogEntry, SystemMetrics } from './types';
+import { Zap, Smartphone, ShieldCheck, Cpu, Terminal, ArrowRight, Play, CheckCircle2 } from 'lucide-react';
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState<'host' | 'bots' | 'monitor' | 'android-code'>('bots');
+  const [activeTab, setActiveTab] = useState<'host' | 'bots' | 'monitor' | 'analytics' | 'android-code'>('bots');
+  const [showHeroBanner, setShowHeroBanner] = useState(true);
   const [bots, setBots] = useState<BotInstance[]>(() => {
     const saved = localStorage.getItem('rizo_bots');
     return saved ? JSON.parse(saved) : INITIAL_BOTS;
@@ -567,7 +570,89 @@ export default function App() {
       />
 
       {/* Main Content Area */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 py-6">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 py-6 space-y-6">
+        {/* Futuristic Hero Engine Spotlight Banner */}
+        {showHeroBanner && (
+          <div className="relative rounded-3xl overflow-hidden border border-emerald-500/30 bg-gradient-to-r from-[#060a14] via-[#0b1324] to-[#060a14] shadow-2xl shadow-black/60 group">
+            {/* Background Graphic with Scrim */}
+            <div className="absolute inset-0 z-0">
+              <img
+                src="/src/assets/images/hero_hosting_engine_1791109443399.jpg"
+                alt="RIZO X ZAINU Android Hosting Engine"
+                referrerPolicy="no-referrer"
+                className="w-full h-full object-cover object-right md:object-center opacity-35 group-hover:scale-105 transition-transform duration-700"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-[#060a14] via-[#060a14]/85 to-transparent" />
+            </div>
+
+            {/* Banner Content */}
+            <div className="relative z-10 p-6 md:p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+              <div className="max-w-2xl space-y-3">
+                <div className="flex items-center gap-2 text-xs font-mono text-emerald-400">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+                  <span className="font-semibold tracking-wider uppercase">Chaquopy Native Python 3.11 Runtime</span>
+                  <span className="text-slate-600">·</span>
+                  <span className="text-slate-400">24/7 Phone RAM Engine</span>
+                </div>
+
+                <h2 className="text-2xl md:text-3xl font-extrabold text-white tracking-tight leading-tight">
+                  Host Telegram Bots 24/7 on Android Memory
+                </h2>
+
+                <p className="text-sm text-slate-300 leading-relaxed max-w-xl">
+                  Run custom Python bots nonstop using your phone's physical RAM, background Foreground Service, and WakeLock keep-alive. Zero monthly cloud bills, zero VPS requirements.
+                </p>
+
+                {/* 4 Live Technical Invariants */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-2 text-xs font-mono">
+                  <div className="p-2.5 rounded-xl bg-slate-950/70 border border-slate-800/80 backdrop-blur-sm">
+                    <div className="text-slate-400 text-[10px] uppercase">Service State</div>
+                    <div className="text-emerald-400 font-bold mt-0.5 truncate">START_STICKY</div>
+                  </div>
+                  <div className="p-2.5 rounded-xl bg-slate-950/70 border border-slate-800/80 backdrop-blur-sm">
+                    <div className="text-slate-400 text-[10px] uppercase">Active Bots</div>
+                    <div className="text-cyan-400 font-bold mt-0.5 tabular-nums">{runningBotsCount} Running</div>
+                  </div>
+                  <div className="p-2.5 rounded-xl bg-slate-950/70 border border-slate-800/80 backdrop-blur-sm">
+                    <div className="text-slate-400 text-[10px] uppercase">Bot RAM Usage</div>
+                    <div className="text-purple-400 font-bold mt-0.5 tabular-nums">{systemMetrics.botTotalRamMb} MB</div>
+                  </div>
+                  <div className="p-2.5 rounded-xl bg-slate-950/70 border border-slate-800/80 backdrop-blur-sm">
+                    <div className="text-slate-400 text-[10px] uppercase">RAM Guard</div>
+                    <div className="text-amber-400 font-bold mt-0.5">{isAutoRamCleanup ? '<500MB Armed' : 'Manual'}</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Quick Action CTAs */}
+              <div className="flex flex-col sm:flex-row md:flex-col gap-2.5 w-full md:w-auto flex-shrink-0">
+                <button
+                  onClick={() => setActiveTab('host')}
+                  className="flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 hover:to-teal-300 text-slate-950 font-bold text-xs sm:text-sm shadow-lg shadow-emerald-500/20 active:scale-95 transition-all cursor-pointer whitespace-nowrap"
+                >
+                  <Zap className="w-4 h-4 fill-slate-950" />
+                  <span>Host New Bot Now</span>
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+
+                <button
+                  onClick={() => setIsTerminalOpen(!isTerminalOpen)}
+                  className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-slate-900/90 hover:bg-slate-800 text-slate-200 border border-slate-700 text-xs font-mono transition-all cursor-pointer whitespace-nowrap"
+                >
+                  <Terminal className="w-3.5 h-3.5 text-emerald-400" />
+                  <span>{isTerminalOpen ? 'Hide Terminal CLI' : 'Open Live Terminal'}</span>
+                </button>
+
+                <button
+                  onClick={() => setShowHeroBanner(false)}
+                  className="text-center text-[10px] text-slate-500 hover:text-slate-400 pt-1 transition-colors cursor-pointer"
+                >
+                  Minimize Banner
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
         {activeTab === 'host' && (
           <HostNewBot
             onHostBot={handleHostBot}
@@ -600,6 +685,13 @@ export default function App() {
             onToggleAutoRamCleanup={handleToggleAutoRamCleanup}
             onSimulateLowRam={handleSimulateLowRam}
             onSimulateCpuSpike={handleSimulateCpuSpike}
+          />
+        )}
+
+        {activeTab === 'analytics' && (
+          <Analytics
+            bots={bots}
+            systemMetrics={systemMetrics}
           />
         )}
 

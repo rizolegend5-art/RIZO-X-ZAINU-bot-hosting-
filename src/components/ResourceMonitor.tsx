@@ -803,6 +803,54 @@ export const ResourceMonitor: React.FC<ResourceMonitorProps> = ({
           </a>
         </div>
       </div>
+
+      {/* Hardware Architecture Showcase Card */}
+      <div className="p-6 rounded-2xl bg-gradient-to-br from-slate-900 via-[#0a101f] to-slate-900 border border-cyan-500/20 shadow-xl space-y-4">
+        <div className="flex flex-col md:flex-row items-center gap-6">
+          <div className="w-full md:w-5/12 rounded-xl overflow-hidden border border-cyan-500/30 shadow-lg relative group">
+            <img
+              src="/src/assets/images/phone_ram_architecture_1791109476869.jpg"
+              alt="Android Phone RAM Architecture Diagram"
+              referrerPolicy="no-referrer"
+              className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-500"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent flex items-end p-3">
+              <span className="text-[11px] font-mono text-cyan-300 flex items-center gap-1.5">
+                <ShieldCheck className="w-3.5 h-3.5 text-cyan-400" />
+                <span>Zero-Cloud Phone RAM Subsystem</span>
+              </span>
+            </div>
+          </div>
+
+          <div className="w-full md:w-7/12 space-y-3">
+            <div className="flex items-center gap-2">
+              <span className="p-1.5 rounded-lg bg-cyan-500/10 border border-cyan-500/30 text-cyan-400">
+                <Smartphone className="w-4 h-4" />
+              </span>
+              <h3 className="font-bold text-white text-base">
+                How RIZO X ZAINU Runs 24/7 on Local Hardware
+              </h3>
+            </div>
+            <p className="text-xs text-slate-300 leading-relaxed">
+              Unlike cloud hosting (VPS/Heroku) which costs monthly fees, RIZO X ZAINU executes Python bytecode directly inside your phone's physical LPDDR4X/LPDDR5 memory using an embedded Chaquopy Python 3.11 virtual machine.
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1 text-xs font-mono">
+              <div className="p-2.5 rounded-lg bg-slate-950/60 border border-slate-800">
+                <div className="text-emerald-400 font-semibold flex items-center gap-1">
+                  <span>⚡ PARTIAL_WAKE_LOCK</span>
+                </div>
+                <div className="text-slate-400 text-[11px] mt-0.5">Keeps CPU clock alive even when screen is locked.</div>
+              </div>
+              <div className="p-2.5 rounded-lg bg-slate-950/60 border border-slate-800">
+                <div className="text-cyan-400 font-semibold flex items-center gap-1">
+                  <span>🛡️ 500MB Auto Guard</span>
+                </div>
+                <div className="text-slate-400 text-[11px] mt-0.5">Auto garbage collection prevents low-memory kill.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

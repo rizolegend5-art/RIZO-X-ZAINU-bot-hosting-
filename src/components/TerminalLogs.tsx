@@ -437,21 +437,43 @@ export const TerminalLogs: React.FC<TerminalLogsProps> = ({
         )}
       </div>
 
+      {/* Quick Command Chips */}
+      <div className="px-3 py-1.5 bg-[#070b14] border-t border-slate-800/60 flex items-center gap-1.5 overflow-x-auto text-[11px] font-mono">
+        <span className="text-slate-500 text-[10px] uppercase tracking-wider font-semibold mr-1">Quick:</span>
+        {[
+          { label: 'status', cmd: 'status' },
+          { label: 'top', cmd: 'top' },
+          { label: 'pip list', cmd: 'pip list' },
+          { label: 'powersave on', cmd: 'powersave on' },
+          { label: 'autoclean on', cmd: 'autoclean on' },
+          { label: 'clear', cmd: 'clear' }
+        ].map((item) => (
+          <button
+            key={item.label}
+            type="button"
+            onClick={() => onExecuteCommand(item.cmd)}
+            className="px-2 py-0.5 rounded bg-slate-900 hover:bg-emerald-500/20 text-slate-300 hover:text-emerald-300 border border-slate-800 hover:border-emerald-500/40 transition-colors whitespace-nowrap cursor-pointer"
+          >
+            {item.label}
+          </button>
+        ))}
+      </div>
+
       {/* Terminal Interactive Input Bar */}
       <form onSubmit={handleCommandSubmit} className="p-2.5 bg-slate-950 border-t border-slate-800/80 flex items-center gap-2">
-        <span className="text-emerald-400 font-bold select-none text-xs pl-2">
+        <span className="text-emerald-400 font-bold select-none text-xs pl-2 font-mono">
           rizo@android-ram:~$
         </span>
         <input
           type="text"
           value={commandInput}
           onChange={(e) => setCommandInput(e.target.value)}
-          placeholder="Type command ('help', 'status', 'filter errors', 'filter stdout', 'clear')..."
+          placeholder="Type command ('status', 'top', 'powersave on', 'autoclean on', 'help')..."
           className="flex-1 bg-transparent text-xs text-white focus:outline-none placeholder-slate-600 font-mono"
         />
         <button
           type="submit"
-          className="px-3 py-1 bg-slate-800 hover:bg-emerald-500 hover:text-slate-950 rounded text-slate-300 text-xs font-semibold transition-colors flex items-center gap-1 cursor-pointer"
+          className="px-3 py-1 bg-slate-800 hover:bg-emerald-500 hover:text-slate-950 rounded text-slate-300 text-xs font-semibold transition-colors flex items-center gap-1 cursor-pointer font-mono"
         >
           <span>Run</span>
           <Send className="w-3 h-3" />

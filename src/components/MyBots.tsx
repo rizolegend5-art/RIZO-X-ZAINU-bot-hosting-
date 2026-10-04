@@ -13,9 +13,13 @@ import {
   AlertTriangle, 
   Save, 
   X, 
-  Plus,
-  ShieldCheck,
-  ExternalLink
+  Plus, 
+  ShieldCheck, 
+  ExternalLink,
+  Copy,
+  Zap,
+  Activity,
+  Send
 } from 'lucide-react';
 import { BotInstance } from '../types';
 
@@ -44,6 +48,8 @@ export const MyBots: React.FC<MyBotsProps> = ({
   const [activeEditorTab, setActiveEditorTab] = useState<string>('bot.py');
   const [editedFiles, setEditedFiles] = useState<Record<string, string>>({});
   const [saveSuccess, setSaveSuccess] = useState(false);
+  const [copiedFile, setCopiedFile] = useState(false);
+  const [pingStatus, setPingStatus] = useState<Record<string, string>>({});
 
   const formatUptime = (seconds: number) => {
     if (seconds <= 0) return '0s';
@@ -69,6 +75,30 @@ export const MyBots: React.FC<MyBotsProps> = ({
     setTimeout(() => {
       setSaveSuccess(false);
     }, 2500);
+  };
+
+  const handleCopyCurrentFile = () => {
+    const content = editedFiles[activeEditorTab] || '';
+    navigator.clipboard.writeText(content);
+    setCopiedFile(true);
+    setTimeout(() => setCopiedFile(false), 2000);
+  };
+
+  const handleSendTestPing = (botId: string, botName: string) => {
+    setPingStatus(prev => ({ ...prev, [botId]: 'Pinging /start...' }));
+    setTimeout(() => {
+      setPingStatus(prev => ({
+        ...prev,
+        [botId]: '✅ [200 OK] Handled in 14ms • Python VM Nominal'
+      }));
+      setTimeout(() => {
+        setPingStatus(prev => {
+          const copy = { ...prev };
+          delete copy[botId];
+          return copy;
+        });
+      }, 3500);
+    }, 600);
   };
 
   return (
@@ -164,10 +194,21 @@ export const MyBots: React.FC<MyBotsProps> = ({
 
                   {/* Action Buttons */}
                   <div className="flex items-center gap-2 flex-wrap">
+                    {isRunning && (
+                      <button
+                        onClick={() => handleSendTestPing(bot.id, bot.name)}
+                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-teal-500/10 hover:bg-teal-500/20 border border-teal-500/30 text-teal-300 text-xs font-medium transition-all shadow-sm active:scale-95 cursor-pointer"
+                        title="Simulate /start command ping to Telegram bot"
+                      >
+                        <Zap className="w-3.5 h-3.5 text-teal-400" />
+                        <span>Ping /start</span>
+                      </button>
+                    )}
+
                     {isRunning ? (
                       <button
                         onClick={() => onStopBot(bot.id)}
-                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-rose-300 text-xs font-medium transition-colors"
+                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-rose-300 text-xs font-medium transition-colors cursor-pointer"
                         title="Stop Foreground Service"
                       >
                         <Square className="w-3.5 h-3.5 fill-rose-300" />
@@ -176,7 +217,7 @@ export const MyBots: React.FC<MyBotsProps> = ({
                     ) : (
                       <button
                         onClick={() => onStartBot(bot.id)}
-                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-500/40 text-emerald-300 text-xs font-semibold transition-colors"
+                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-500/40 text-emerald-300 text-xs font-semibold transition-colors cursor-pointer"
                         title="Start 24/7 Foreground Service"
                       >
                         <Play className="w-3.5 h-3.5 fill-emerald-300" />
@@ -186,7 +227,7 @@ export const MyBots: React.FC<MyBotsProps> = ({
 
                     <button
                       onClick={() => onRestartBot(bot.id)}
-                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 text-xs font-medium transition-colors"
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 text-xs font-medium transition-colors cursor-pointer"
                       title="Restart Process"
                     >
                       <RotateCw className="w-3.5 h-3.5" />
@@ -195,7 +236,7 @@ export const MyBots: React.FC<MyBotsProps> = ({
 
                     <button
                       onClick={() => handleOpenEditor(bot)}
-                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 text-cyan-300 text-xs font-medium transition-colors"
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 text-cyan-300 text-xs font-medium transition-colors cursor-pointer"
                       title="Inspect & Edit bot.py, requirements.txt, .env"
                     >
                       <FileCode className="w-3.5 h-3.5" />
@@ -204,7 +245,7 @@ export const MyBots: React.FC<MyBotsProps> = ({
 
                     <button
                       onClick={() => onOpenTerminalForBot(bot.id)}
-                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 text-xs font-medium transition-colors"
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 text-xs font-medium transition-colors cursor-pointer"
                       title="View Live Terminal Logs"
                     >
                       <Terminal className="w-3.5 h-3.5 text-emerald-400" />
@@ -213,13 +254,21 @@ export const MyBots: React.FC<MyBotsProps> = ({
 
                     <button
                       onClick={() => onDeleteBot(bot.id)}
-                      className="p-1.5 rounded-lg hover:bg-rose-500/10 text-slate-500 hover:text-rose-400 transition-colors"
+                      className="p-1.5 rounded-lg hover:bg-rose-500/10 text-slate-500 hover:text-rose-400 transition-colors cursor-pointer"
                       title="Delete Bot"
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>
                   </div>
                 </div>
+
+                {/* Test Ping Status Banner */}
+                {pingStatus[bot.id] && (
+                  <div className="px-3.5 py-1.5 rounded-lg bg-emerald-950/40 border border-emerald-500/40 text-emerald-300 text-xs font-mono flex items-center gap-2 animate-fadeIn">
+                    <Activity className="w-3.5 h-3.5 text-emerald-400 animate-pulse" />
+                    <span>{pingStatus[bot.id]}</span>
+                  </div>
+                )}
 
                 {/* Bottom Row: Hardware Telemetry */}
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-3 border-t border-slate-800/80 text-xs font-mono">
@@ -299,12 +348,22 @@ export const MyBots: React.FC<MyBotsProps> = ({
                 ))}
               </div>
 
-              {saveSuccess && (
-                <div className="flex items-center gap-1.5 text-xs text-emerald-400 font-mono">
-                  <CheckCircle2 className="w-3.5 h-3.5" />
-                  <span>Saved & Reloaded!</span>
-                </div>
-              )}
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={handleCopyCurrentFile}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-300 hover:text-white text-xs font-mono transition-colors cursor-pointer"
+                  title="Copy file content to clipboard"
+                >
+                  <Copy className="w-3.5 h-3.5 text-cyan-400" />
+                  <span>{copiedFile ? 'Copied!' : 'Copy'}</span>
+                </button>
+                {saveSuccess && (
+                  <div className="flex items-center gap-1.5 text-xs text-emerald-400 font-mono">
+                    <CheckCircle2 className="w-3.5 h-3.5" />
+                    <span>Saved & Reloaded!</span>
+                  </div>
+                )}
+              </div>
             </div>
 
             {/* Code Content */}

@@ -9,7 +9,6 @@ import android.os.PowerManager
 import androidx.core.app.NotificationCompat
 import com.chaquo.python.Python
 import com.rizoxzainu.hostingbot.MainActivity
-import com.rizoxzainu.hostingbot.R
 import com.rizoxzainu.hostingbot.RizoApp
 import kotlinx.coroutines.*
 import java.io.File

@@ -21,9 +21,9 @@
     <application
         android:name=".RizoApp"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:label="RIZO X ZAINU hosting bot"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:icon="@android:drawable/sym_def_app_icon"
+        android:label="@string/app_name"
+        android:roundIcon="@android:drawable/sym_def_app_icon"
         android:supportsRtl="true"
         android:theme="@style/Theme.RizoHostingBot"
         android:requestLegacyExternalStorage="true"
@@ -61,6 +61,5 @@
                 <action android:name="android.intent.action.QUICKBOOT_POWERON" />
             </intent-filter>
         </receiver>
-
     </application>
 </manifest>

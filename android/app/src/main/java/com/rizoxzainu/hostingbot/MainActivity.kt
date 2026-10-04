@@ -20,7 +20,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.rizoxzainu.hostingbot.service.BotForegroundService
-import com.rizoxzainu.hostingbot.ui.theme.RizoDarkTheme
+
+@Composable
+fun RizoDarkTheme(content: @Composable () -> Unit) {
+    MaterialTheme(
+        colorScheme = darkColorScheme(
+            background = Color(0xFF070B14),
+            surface = Color(0xFF0F172A),
+            primary = Color(0xFF10B981)
+        ),
+        content = content
+    )
+}
 
 class MainActivity : ComponentActivity() {
 

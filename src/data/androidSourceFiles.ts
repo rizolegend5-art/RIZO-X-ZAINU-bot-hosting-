@@ -142,124 +142,136 @@ jobs:
 </manifest>`
   },
   {
-    path: 'app/build.gradle.kts',
-    language: 'kotlin',
+    path: 'app/build.gradle',
+    language: 'groovy',
     description: 'App Gradle file configured with Chaquopy embedded Python 3.11 engine, Jetpack Compose, Coroutines.',
     content: `plugins {
-    alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
-    id("com.chaquo.python") // Chaquopy enables native Python execution inside Android APK
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+    id 'com.chaquo.python'
 }
 
 android {
-    namespace = "com.rizoxzainu.hostingbot"
-    compileSdk = 34
+    namespace 'com.rizoxzainu.hostingbot'
+    compileSdk 34
 
     defaultConfig {
-        applicationId = "com.rizoxzainu.hostingbot"
-        minSdk = 24
-        targetSdk = 34
-        versionCode = 1
-        versionName = "1.0.0"
+        applicationId "com.rizoxzainu.hostingbot"
+        minSdk 24
+        targetSdk 34
+        versionCode 1
+        versionName "1.0.0"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        vectorDrawables {
-            useSupportLibrary = true
-        }
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-        // Chaquopy Python Engine Configuration
         ndk {
-            abiFilters += listOf("arm64-v8a", "armeabi-v7a", "x86_64")
+            abiFilters "arm64-v8a", "x86_64"
         }
 
         python {
-            version = "3.11"
+            version "3.11"
             pip {
-                // Built-in standard packages for Telegram bots
-                install("pyTelegramBotAPI==4.16.1")
-                install("python-dotenv==1.0.1")
-                install("requests==2.31.0")
-                install("urllib3==2.2.1")
+                install "pyTelegramBotAPI==4.16.1"
+                install "python-dotenv==1.0.1"
+                install "requests==2.31.0"
             }
         }
     }
 
     buildTypes {
         release {
-            isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            debuggable true
         }
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 
     kotlinOptions {
-        jvmTarget = "17"
+        jvmTarget = '17'
     }
 
     buildFeatures {
-        compose = true
+        compose true
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.8"
+        kotlinCompilerExtensionVersion '1.5.8'
     }
 
-    packaging {
+    packagingOptions {
         resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
     }
 }
 
 dependencies {
-    implementation("androidx.core:core-ktx:1.12.0")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
-    implementation("androidx.activity:activity-compose:1.8.2")
-    implementation(platform("androidx.compose:compose-bom:2024.02.00"))
-    implementation("androidx.compose.ui:ui")
-    implementation("androidx.compose.ui:ui-graphics")
-    implementation("androidx.compose.ui:ui-tooling-preview")
-    implementation("androidx.compose.material3:material3:1.2.0")
-    implementation("androidx.compose.material:material-icons-extended:1.6.2")
+    implementation 'androidx.core:core-ktx:1.12.0'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.7.0'
+    implementation 'androidx.activity:activity-compose:1.8.2'
+    implementation platform('androidx.compose:compose-bom:2024.02.00')
+    implementation 'androidx.compose.ui:ui'
+    implementation 'androidx.compose.ui:ui-graphics'
+    implementation 'androidx.compose.ui:ui-tooling-preview'
+    implementation 'androidx.compose.material3:material3:1.2.0'
+    implementation 'androidx.compose.material:material-icons-extended:1.6.2'
     
     // Coroutines & Lifecycle
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
-    implementation("androidx.lifecycle:lifecycle-service:2.7.0")
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3'
+    implementation 'androidx.lifecycle:lifecycle-service:2.7.0'
     
     // Gson for bot metadata storage
-    implementation("com.google.code.gson:gson:2.10.1")
+    implementation 'com.google.code.gson:gson:2.10.1'
 }
 `
   },
   {
-    path: 'build.gradle.kts',
-    language: 'kotlin',
+    path: 'build.gradle',
+    language: 'groovy',
     description: 'Root Gradle buildscript configuring Chaquopy and Android Gradle plugin.',
-    content: `// Top-level build file where you can add configuration options common to all sub-projects/modules.
-plugins {
-    alias(libs.plugins.android.application) apply false
-    alias(libs.plugins.kotlin.android) apply false
-    id("com.chaquo.python") version "15.0.1" apply false
+    content: `buildscript {
+    repositories {
+        google()
+        mavenCentral()
+        maven { url "https://chaquo.com/maven" }
+    }
+    dependencies {
+        classpath "com.android.tools.build:gradle:8.2.2"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.22"
+        classpath "com.chaquo.python:gradle:15.0.1"
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+        maven { url "https://chaquo.com/maven" }
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
 }
 `
   },
   {
-    path: 'settings.gradle.kts',
-    language: 'kotlin',
+    path: 'settings.gradle',
+    language: 'groovy',
     description: 'Settings Gradle specifying Maven repositories including Chaquopy repo.',
     content: `pluginManagement {
     repositories {
         google()
         mavenCentral()
         gradlePluginPortal()
-        maven { url = java.net.URI("https://chaquo.com/maven") }
+        maven { url "https://chaquo.com/maven" }
     }
 }
 dependencyResolutionManagement {
@@ -267,13 +279,62 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        maven { url = java.net.URI("https://chaquo.com/maven") }
+        maven { url "https://chaquo.com/maven" }
     }
 }
 
 rootProject.name = "RIZO X ZAINU hosting bot"
-include(":app")
+include ':app'
 `
+  },
+  {
+    path: 'app/src/main/res/values/themes.xml',
+    language: 'xml',
+    description: 'Dark theme definition for Android application window.',
+    content: `<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.RizoHostingBot" parent="android:Theme.Material.NoActionBar">
+        <item name="android:statusBarColor">#070B14</item>
+        <item name="android:navigationBarColor">#0F172A</item>
+    </style>
+</resources>`
+  },
+  {
+    path: 'app/src/main/res/values/strings.xml',
+    language: 'xml',
+    description: 'Application name string resource.',
+    content: `<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">RIZO X ZAINU hosting bot</string>
+</resources>`
+  },
+  {
+    path: 'app/src/main/java/com/rizoxzainu/hostingbot/receiver/BootCompletedReceiver.kt',
+    language: 'kotlin',
+    description: 'Auto-starts BotForegroundService on phone boot.',
+    content: `package com.rizoxzainu.hostingbot.receiver
+
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.os.Build
+import com.rizoxzainu.hostingbot.service.BotForegroundService
+
+class BootCompletedReceiver : BroadcastReceiver() {
+    override fun onReceive(context: Context, intent: Intent) {
+        if (intent.action == Intent.ACTION_BOOT_COMPLETED || intent.action == "android.intent.action.QUICKBOOT_POWERON") {
+            val serviceIntent = Intent(context, BotForegroundService::class.java).apply {
+                action = BotForegroundService.ACTION_START_BOT
+                putExtra(BotForegroundService.EXTRA_BOT_NAME, "RIZO Auto-Start Service")
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                context.startForegroundService(serviceIntent)
+            } else {
+                context.startService(serviceIntent)
+            }
+        }
+    }
+}`
   },
   {
     path: 'app/src/main/java/com/rizoxzainu/hostingbot/RizoApp.kt',

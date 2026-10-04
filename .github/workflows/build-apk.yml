@@ -24,34 +24,32 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
-          cache: 'gradle'
 
       - name: 🤖 Set up Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: 🐍 Set up Python 3.11 (Required for Chaquopy wheel compilation)
+      - name: 🐍 Set up Python 3.11
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      - name: 🔧 Grant execute permission for gradlew
-        run: |
-          if [ -d "android" ]; then
-            cd android
-          fi
-          chmod +x gradlew || true
+      - name: 🐘 Set up Gradle 8.4
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.4'
 
       - name: 🚀 Build Debug APK with Gradle
         run: |
-          if [ -d "android" ]; then
-            cd android
-          fi
-          ./gradlew assembleDebug --stacktrace --no-daemon
+          cd android
+          gradle assembleDebug --stacktrace --no-daemon
 
       - name: 🔍 Locate Debug APK
         id: find_apk
         run: |
-          APK_PATH=$(find . -name "*debug.apk" | head -n 1)
+          APK_PATH=$(find android -name "*debug.apk" | head -n 1)
+          if [ -z "$APK_PATH" ]; then
+            APK_PATH=$(find . -name "*debug.apk" | head -n 1)
+          fi
           echo "Found APK at: $APK_PATH"
           echo "apk_path=$APK_PATH" >> $GITHUB_OUTPUT
 
@@ -63,7 +61,7 @@ jobs:
           retention-days: 14
 
       - name: 🏷️ Create Release with APK (on push to main)
-        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+        if: (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master') && github.event_name == 'push'
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v2.4-debug-${{ github.run_number }}
@@ -87,3 +85,4 @@ jobs:
           files: ${{ steps.find_apk.outputs.apk_path }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        continue-on-error: true

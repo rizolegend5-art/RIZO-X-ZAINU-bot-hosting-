@@ -12,7 +12,9 @@ import {
   HelpCircle,
   Smartphone,
   ShieldCheck,
-  FolderOpen
+  FolderOpen,
+  Eye,
+  EyeOff
 } from 'lucide-react';
 import { TEMPLATES } from '../data/sampleBots';
 import { BotInstance } from '../types';
@@ -26,6 +28,7 @@ export const HostNewBot: React.FC<HostNewBotProps> = ({ onHostBot }) => {
   const [botName, setBotName] = useState('Telegram Assistant');
   const [botDescription, setBotDescription] = useState('24/7 Telegram bot hosted locally on Android RAM');
   const [botToken, setBotToken] = useState('');
+  const [showToken, setShowToken] = useState(false);
   const [adminHandle, setAdminHandle] = useState('@rizohacker');
   const [activeFileTab, setActiveFileTab] = useState<'bot.py' | 'requirements.txt' | '.env'>('bot.py');
 
@@ -288,13 +291,23 @@ export const HostNewBot: React.FC<HostNewBotProps> = ({ onHostBot }) => {
                   </span>
                   <span className="text-[11px] text-slate-400">Can also be set in .env</span>
                 </label>
-                <input
-                  type="text"
-                  value={botToken}
-                  onChange={(e) => setBotToken(e.target.value)}
-                  placeholder="123456789:AAFxXXXXXXXXXXXXXXXXXXXXXX"
-                  className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-sm text-slate-100 font-mono focus:outline-none focus:border-emerald-500"
-                />
+                <div className="relative">
+                  <input
+                    type={showToken ? 'text' : 'password'}
+                    value={botToken}
+                    onChange={(e) => setBotToken(e.target.value)}
+                    placeholder="123456789:AAFxXXXXXXXXXXXXXXXXXXXXXX"
+                    className="w-full px-3 py-2 pr-10 rounded-lg bg-slate-950 border border-slate-800 text-sm text-slate-100 font-mono focus:outline-none focus:border-emerald-500"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowToken(!showToken)}
+                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 transition-colors p-1"
+                    title={showToken ? 'Hide token' : 'Show token'}
+                  >
+                    {showToken ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
               </div>
             </div>
 
