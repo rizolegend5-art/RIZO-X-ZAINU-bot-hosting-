@@ -1,0 +1,6 @@
+{
+  "name": "RIZO X ZAINU hosting bot",
+  "description": "Host 24/7 background Telegram bots directly on Android using local phone RAM, foreground services, and native Python runtime engine.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
